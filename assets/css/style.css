@@ -1,0 +1,24 @@
+body {
+    font-family: Poppins, sans-serif;
+    background-color: #181118;
+    color: white;
+    margin-left: 32px;
+}
+
+a {
+    color: inherit;
+}
+
+.link-quiet {
+    color: #aaf;
+    text-decoration: none;
+}
+
+.file-content > pre {
+    background: none !important;
+}
+
+.icon {
+    height: 1em;
+    fill: #aaf;
+}

@@ -1,0 +1,26 @@
+[package]
+name = "gitit"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+axum = { version = "0.5", features = ["headers", "multipart"] }
+git2 = "0.14"
+liquid = "0.26"
+thiserror = "1.0.31"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+serde = { version = "1", features = ["derive"] }
+html-escape = "0.2.11"
+tower-http = { version = "0.3.3", features = ["trace"] }
+axum-macros = "0.2.2"
+mime_guess = "2.0.4"
+mime = "0.3.16"
+rust-embed = "6.4.0"
+hex = "0.4.3"
+toml = "0.5.9"
+clap = { version = "3.1.18", features = ["derive"] }
+syntect = "5.0.0"

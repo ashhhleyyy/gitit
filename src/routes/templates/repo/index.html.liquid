@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ repo.name }}</title>
+    <link rel="stylesheet" href="https://unpkg.com/@fontsource/poppins@4.5.8/index.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+    <nav>
+        <a href="/">&larr; Back to projects</a>
+    </nav>
+
+    <h1>{{ repo.name }}</h1>
+
+    <nav>
+        <ul>
+            <li>
+                <a href="commit/{{ repo.head }}">HEAD</a>
+                <a class="link-quiet" href="commit/{{ repo.head }}/contents/">[files]</a>
+            </li>
+        </ul>
+    </nav>
+
+    <section>
+        <h2>Recent commits</h2>
+        <ul>
+            {% for commit in repo.recent_commits %}
+                <li>
+                    <a href="commit/{{ commit.hash }}">
+                        <b><code>{{ commit.short_hash }}</code></b>: {{ commit.summary }} (+{{ commit.diff.added }}, -{{ commit.diff.removed }})</a>
+                    ~ {{ commit.author.name }}
+                    <a class="link-quiet" href="commit/{{ commit.hash }}/contents/">[files]</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+</body>
+</html>
