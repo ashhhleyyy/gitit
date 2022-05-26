@@ -19,6 +19,12 @@ pub struct ListenConfig {
 pub struct RepoConfig {
     pub url: String,
     pub title: String,
+    #[serde(default = "default_head")]
+    pub head: String,
+}
+
+fn default_head() -> String {
+    "main".to_owned()
 }
 
 pub(super) fn load() -> Result<Config> {
