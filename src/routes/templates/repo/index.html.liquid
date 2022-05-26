@@ -17,28 +17,68 @@
 
     <nav>
         <h2>Branches</h2>
-        <ul>
-            {% for branch in repo.branches %}
-                <li>
-                    <a href="commit/{{ branch.commit.hash }}">{{ branch.name }}</a>
-                    <a class="link-quiet" href="commit/{{ branch.commit.hash }}/contents/">[files]</a>
-                </li>
-            {% endfor %}
-        </ul>
+        <table>
+            <thead>
+                <th>Name</th>
+                <th></th>
+            </thead>
+            <tbody>
+                {% for branch in repo.branches %}
+                    <tr>
+                        <td>
+                            <a href="commit/{{ branch.commit.hash }}">{{ branch.name }}</a>
+                        </td>
+                        <td>
+                            <a class="link-quiet" href="commit/{{ branch.commit.hash }}/contents/">[files]</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </nav>
 
     <main>
         <h2>Recent commits</h2>
-        <ul>
-            {% for commit in repo.recent_commits %}
-                <li>
-                    <a href="commit/{{ commit.hash }}">
-                        <b><code>{{ commit.short_hash }}</code></b>: {{ commit.summary }} (+{{ commit.diff.added }}, -{{ commit.diff.removed }})</a>
-                    ~ {{ commit.author.name }}
-                    <a class="link-quiet" href="commit/{{ commit.hash }}/contents/">[files]</a>
-                </li>
-            {% endfor %}
-        </ul>
+        <table>
+            <thead>
+                <th>Hash</th>
+                <th>Message</th>
+                <th>Author</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </thead>
+            <tbody>
+                {% for commit in repo.recent_commits %}
+                    <tr>
+                        <td>
+                            <a href="commit/{{ commit.hash }}">
+                                <b><code>{{ commit.short_hash }}</code></b>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="commit/{{ commit.hash }}">
+                                {{ commit.summary }}
+                            </a>
+                        </td>
+                        <td>{{ commit.author.name }}</td>
+                        {% if commit.diff.added != 0 %}
+                            <td class="green">+{{ commit.diff.added }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if commit.diff.removed != 0 %}
+                            <td class="red">-{{ commit.diff.removed }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        <td>
+                            <a class="link-quiet" href="commit/{{ commit.hash }}/contents/">[files]</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </main>
 </body>
 </html>

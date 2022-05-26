@@ -9,6 +9,10 @@ a {
     color: inherit;
 }
 
+th {
+    text-align: start;
+}
+
 .link-quiet {
     color: #aaf;
     text-decoration: none;
@@ -21,4 +25,12 @@ a {
 .icon {
     height: 1em;
     fill: #aaf;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
 }
