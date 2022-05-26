@@ -16,15 +16,18 @@
     <h1>{{ repo.name }}</h1>
 
     <nav>
+        <h2>Branches</h2>
         <ul>
-            <li>
-                <a href="commit/{{ repo.head }}">HEAD</a>
-                <a class="link-quiet" href="commit/{{ repo.head }}/contents/">[files]</a>
-            </li>
+            {% for branch in repo.branches %}
+                <li>
+                    <a href="commit/{{ branch.commit.hash }}">{{ branch.name }}</a>
+                    <a class="link-quiet" href="commit/{{ branch.commit.hash }}/contents/">[files]</a>
+                </li>
+            {% endfor %}
         </ul>
     </nav>
 
-    <section>
+    <main>
         <h2>Recent commits</h2>
         <ul>
             {% for commit in repo.recent_commits %}
@@ -36,6 +39,6 @@
                 </li>
             {% endfor %}
         </ul>
-    </section>
+    </main>
 </body>
 </html>

@@ -76,11 +76,16 @@ fn clone_repository(repo_config: RepoConfig, path: &Path) -> Result<()> {
     });
 
     let mut fo = FetchOptions::new();
+    fo.download_tags(AutotagOption::All);
     fo.remote_callbacks(cb);
-    RepoBuilder::new()
+    let repo = RepoBuilder::new()
         .fetch_options(fo)
         .bare(true)
+        .remote_create(|repo,name,url| repo.remote_with_fetch(name, url, "+refs/*:refs/*"))
         .clone(&repo_config.url, path)?;
+
+    repo.config()?.set_bool("remote.origin.mirror", true)?;
+
     println!();
 
     Ok(())
@@ -183,10 +188,10 @@ pub(crate) fn update_repos(config: Config) -> Result<()> {
         path.push("repos");
         path.push(format!("{}.git", slug));
         if !path.exists() {
-            tracing::info!("==> Cloning {} into {:?}...", repo_config.url, &path);
+            tracing::info!("Cloning {} into {:?}...", repo_config.url, &path);
             clone_repository(repo_config, &path)?;
         } else {
-            tracing::info!("==> Fetching {} in {:?}...", repo_config.url, &path);
+            tracing::info!("Fetching {} in {:?}...", repo_config.url, &path);
             fetch_repo(repo_config, &path)?;
         }
     }

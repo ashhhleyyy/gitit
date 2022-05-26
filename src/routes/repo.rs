@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use axum::{extract::{Path, OriginalUri}, response::{Html, IntoResponse}, http::header, Extension};
-use git2::{Repository, Sort, Tree, Blob};
+use git2::{Repository, Sort, Tree, Blob, BranchType};
 
 use crate::{errors::{Result, GititError}, utils::{templates, ObjectId, HtmlOrRaw, safe_mime}, config::{Config, RepoConfig}};
 
@@ -47,23 +47,31 @@ pub(crate) async fn index(Path(repo_name): Path<String>, Extension(config): Exte
         .parse(include_str!("templates/repo/index.html.liquid"))?;
 
     let (repo_config, repo) = repo_from_name(&repo_name, &config)?;
-    let mut revwalk = repo.revwalk()?;
-    revwalk.push_head()?;
-    revwalk.set_sorting(Sort::TIME)?;
+    // let mut revwalk = repo.revwalk()?;
+    // revwalk.push_head()?;
+    // revwalk.set_sorting(Sort::TIME)?;
 
-    let mut commits = Vec::with_capacity(100);
-    for commit in revwalk.take(500) {
-        let commit_id = commit?;
-        let commit = repo.find_commit(commit_id)?;
-        commits.push(templates::commit_to_object(&repo, &commit)?);
+    let commits = Vec::<liquid::Object>::with_capacity(100);
+    // for commit in revwalk.take(500) {
+    //     let commit_id = commit?;
+    //     let commit = repo.find_commit(commit_id)?;
+    //     commits.push(templates::commit_to_object(&repo, &commit)?);
+    // }
+
+    let mut branches = Vec::with_capacity(10);
+    for branch in repo.branches(Some(BranchType::Local))? {
+        let (branch, _) = branch?;
+        let commit = branch.get().peel_to_commit()?;
+        branches.push(liquid::object!({
+            "name": branch.name()?,
+            "commit": templates::commit_to_object(&repo, &commit)?,
+        }));
     }
-
-    let head = repo.head()?.target().unwrap().to_string();
 
     let repo = liquid::object!({
         "name": repo_config.title,
         "recent_commits": commits,
-        "head": head,
+        "branches": branches,
     });
 
     Ok(Html(template.render(&liquid::object!({
